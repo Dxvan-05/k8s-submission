@@ -19,5 +19,5 @@ spec:
         image: dxvann/todo-app:1.5
         env:
           - name: PORT
-            value: 6767
+            value: "6767"
         
