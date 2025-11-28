@@ -17,4 +17,7 @@ spec:
       containers:
       - name: todo-app
         image: dxvann/todo-app:1.2
+        env:
+          - name: PORT
+            value: 6767
         
