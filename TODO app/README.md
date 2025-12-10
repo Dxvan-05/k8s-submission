@@ -1,22 +1,22 @@
 # To view the app running in k8s
 
+> [!NOTE]
+> For this you need to have access to port 30080 on the kubernetes agent node
+> This command will forward requests from port 8082 on the local machine to port 30080 on the first agent node of the k8s cluster
+> k3d cluster create -a 2 -p 8082:30080@agent:0
+
 1. Deploy the app to the k8s cluster
 
 ```shell
 kubectl apply -f manifests/deployment.yaml
 ```
-> [!NOTE]
-> The pod should be running after applying the deployment.
-> Use ```kubectl get pods```` to get the pod_name
 
-2. Port forward the pod
 
-> [!NOTE]
-> Replace <pod_name> with the name of the pod.
-> <local_port> to choose the port on your machine where the app will run
+2. Apply NodePort service
+
 
 ```shell
-kubectl port-forward <pod_name> <local_port>:6767
+kubectl apply -f manifests/service.yaml
 ```
 
-3. Visit localhost:<local_port> in the browser
+3. Visit localhost:8082 in the browser
