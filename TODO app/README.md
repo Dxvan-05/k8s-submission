@@ -1,22 +1,52 @@
-# To view the app running in k8s
+# Accessing the App
 
 > [!NOTE]
-> For this you need to have access to port 30080 on the kubernetes agent node
-> This command will forward requests from port 8082 on the local machine to port 30080 on the first agent node of the k8s cluster
-> k3d cluster create -a 2 -p 8082:30080@agent:0
+> For this you need to have access to port 30080 on the kubernetes loadbalancer.
+> This command will forward requests from port 8081 on the local machine to port 80 on the loadbalancer
 
-1. Deploy the app to the k8s cluster
+---
 
-```shell
+ 1. Create the k3d Cluster
+
+```sh
+k3d cluster create -a 2 -p 8081:80@loadbalancer
+```
+
+
+---
+
+2. Deploy the App
+
+```sh
 kubectl apply -f manifests/deployment.yaml
 ```
 
+---
 
-2. Apply NodePort service
+3. Apply the ClusterIP Service
 
-
-```shell
+```sh
 kubectl apply -f manifests/service.yaml
 ```
 
-3. Visit localhost:8082 in the browser
+
+
+---
+
+4. Apply the Ingress Resource
+
+```sh
+kubectl apply -f manifests/ingress.yaml
+```
+
+This routes traffic from the loadbalancer to service.
+
+---
+
+5. Access through browser
+
+Open in your browser:
+
+```
+http://localhost:8081
+```
