@@ -5,4 +5,8 @@ WORKDIR /app
 
 COPY . .
 
-ENTRYPOINT [ "python", "-u", "app.py" ]
+RUN ["pip", "install", "-r", "requirements.txt"]
+
+ENTRYPOINT [ "fastapi", "run", "app.py", "--port", "9090" ]
+
+EXPOSE 9090

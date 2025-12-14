@@ -1,12 +1,13 @@
 import uuid
-import time
 from datetime import datetime
-
+from fastapi import FastAPI
+from fastapi.responses import PlainTextResponse
 
 random_uuid = uuid.uuid4()
 
-while True:
+app = FastAPI()
+
+@app.get("/", response_class=PlainTextResponse)
+def read_uuid():
     current_time = datetime.now()
-    print(f'{current_time}: {random_uuid}')
-    time.sleep(5)
-    
+    return f'{current_time} {random_uuid}'
