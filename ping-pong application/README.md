@@ -35,5 +35,7 @@ kubectl apply -f ../Log\ Output/manifests/ingress.yaml
 
 5. Access through browser
 
+```
 http://localhost:8081/pingpong
+```
 
