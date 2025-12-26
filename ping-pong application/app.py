@@ -5,7 +5,7 @@ app = FastAPI()
 
 counter = 0
 
-@app.get("/", response_class=PlainTextResponse)
+@app.get("/pingpong", response_class=PlainTextResponse)
 def get_counter():
     global counter
     counter += 1
