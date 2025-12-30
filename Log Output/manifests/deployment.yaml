@@ -14,7 +14,19 @@ spec:
       labels:
         app: log-app
     spec:
+      volumes:
+        - name: shared-image
+          emptyDir: {}
       containers:
-      - name: log-app
-        image: dxvann/log-app:1.7
+        - name: log-app-write
+          image: dxvann/log-output-write:1.10
+          volumeMounts:
+            - name: shared-image
+              mountPath: /usr/src/app/files
+        - name: log-app-read
+          image: dxvann/log-output-read:1.10
+          volumeMounts:
+            - name: shared-image
+              mountPath: /usr/src/app/files
+
         

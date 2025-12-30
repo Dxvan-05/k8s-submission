@@ -1,0 +1,12 @@
+FROM python:3.11
+
+WORKDIR /app
+
+COPY read.py .
+COPY requirements.txt .
+
+RUN ["pip", "install", "-r", "requirements.txt"]
+
+ENTRYPOINT [ "fastapi", "run", "read.py", "--port", "9090" ]
+
+EXPOSE 9090
