@@ -4,7 +4,7 @@ from os import environ
 
 app = FastAPI()
 
-FILE_PATH = environ.get('FILE_PATH', './count.txt')
+FILE_PATH = environ.get('PING_PONG_FILE_PATH', './count.txt')
 
 def write_to_disk(string):
     with open(FILE_PATH, 'w') as file:
