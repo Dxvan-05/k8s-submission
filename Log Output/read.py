@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
+from os import environ
 
-FILE_PATH = '/usr/src/app/files/uuid.txt'
+FILE_PATH = environ.get('LOG_OUT_FILE_PATH', './uuid.txt')
 
 app = FastAPI()
 
