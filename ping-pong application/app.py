@@ -4,14 +4,14 @@ from os import environ
 
 app = FastAPI()
 
-FILE_PATH = environ.get('PING_PONG_FILE_PATH', './count.txt')
+PING_PONG_FILE_PATH = environ.get('PING_PONG_FILE_PATH', './count.txt')
 
 def write_to_disk(string):
-    with open(FILE_PATH, 'w') as file:
+    with open(PING_PONG_FILE_PATH, 'w') as file:
         file.write(string)
 
 def read_from_disk():
-    with open(FILE_PATH, 'r') as file:
+    with open(PING_PONG_FILE_PATH, 'r') as file:
         return file.read()
 
 write_to_disk('0')

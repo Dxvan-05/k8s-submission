@@ -3,10 +3,10 @@ from datetime import datetime
 from time import sleep
 from os import environ
 
-FILE_PATH = environ.get('LOG_OUT_FILE_PATH', './uuid.txt')
+LOG_OUT_FILE_PATH = environ.get('LOG_OUT_FILE_PATH', './uuid.txt')
 
 def write_to_disk(string):
-    with open(FILE_PATH, 'w') as file:
+    with open(LOG_OUT_FILE_PATH, 'w') as file:
         file.write(string)
 
 
