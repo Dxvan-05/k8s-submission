@@ -14,10 +14,24 @@ spec:
       labels:
         app: todo-app
     spec:
+      volumes:
+        - name: shared-image
+          persistentVolumeClaim:
+            claimName: image-claim
       containers:
       - name: todo-app
-        image: dxvann/todo-app:1.5
+        image: dxvann/todo-app:1.12
+        imagePullPolicy: Always
+        volumeMounts:
+            - name: shared-image
+              mountPath: /server/public/image/
         env:
           - name: PORT
             value: "6767"
+          - name: IMAGE_REFRESH_INTERVAL_MIN
+            value: "10"
+          - name: IMAGE_DOWNLOAD_URL
+            value: "https://picsum.photos/1200"
+          - name: IMAGE_DOWNLOAD_PATH
+            value: "/server/public/image/image.jpeg"
         

@@ -1,9 +1,8 @@
 # Accessing the App
 
 > [!NOTE]
-> For this you need to have access to port 30080 on the kubernetes loadbalancer.
+> For this you need to have access to port 80 on the kubernetes loadbalancer.
 > This command will forward requests from port 8081 on the local machine to port 80 on the loadbalancer
-
 
 
  1. Create the k3d Cluster
@@ -12,31 +11,41 @@
 k3d cluster create -a 2 -p 8081:80@loadbalancer
 ```
 
+2. Apply persistent storage
 
-2. Deploy the App
+```sh
+kubectl apply -f ../manifests/persistent-volume.yaml
+```
+
+3. Apply persistent storage claim
+
+```sh
+kubectl apply -f ../manifests/persistent-volume-claim.yaml
+```
+
+4. Deploy the TODO app
 
 ```sh
 kubectl apply -f manifests/deployment.yaml
 ```
 
 
-3. Apply the ClusterIP Service
+5. Apply the ClusterIP Service for TODO app
 
 ```sh
 kubectl apply -f manifests/service.yaml
 ```
 
 
-4. Apply the Ingress Resource
+6. Apply the Ingress Resource
 
 ```sh
 kubectl apply -f manifests/ingress.yaml
 ```
 
-This routes traffic from the loadbalancer to service.
 
 
-5. Access through browser
+7. Access through browser
 
 Open in your browser:
 
