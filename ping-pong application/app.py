@@ -18,8 +18,13 @@ write_to_disk('0')
 
 
 @app.get("/pingpong", response_class=PlainTextResponse)
-def get_counter():
+def respond_pong():
     counter = int(read_from_disk())
     counter += 1
     write_to_disk(str(counter))
     return f"pong {counter}"
+
+@app.get("/pings", response_class=PlainTextResponse)
+def get_counter():
+    counter = int(read_from_disk())
+    return str(counter)

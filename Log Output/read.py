@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
+import requests
 from os import environ
 
 LOG_OUT_FILE_PATH = environ.get('LOG_OUT_FILE_PATH', './uuid.txt')
-PING_PONG_FILE_PATH = environ.get('PING_PONG_FILE_PATH')
+PING_PONG_URL= environ.get('PING_PONG_URL')
 
 app = FastAPI()
 
@@ -12,9 +13,13 @@ def read_file(PATH):
         file_content = file.read()
         return file_content
 
+def get_count():
+    response = requests.get(f'{PING_PONG_URL}/pings')
+    count = response.text
+    return count
 
 @app.get("/", response_class=PlainTextResponse)
 def read_uuid():
     log_output = read_file(LOG_OUT_FILE_PATH)
-    ping_pong_count = read_file(PING_PONG_FILE_PATH)
+    ping_pong_count = get_count()
     return f'{log_output}\nPing / Pongs: {ping_pong_count}'

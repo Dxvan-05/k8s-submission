@@ -16,8 +16,7 @@ spec:
     spec:
       volumes:
         - name: shared-image
-          persistentVolumeClaim:
-            claimName: image-claim
+          emptyDir: {}
       containers:
         - name: log-app-write
           image: dxvann/log-output-write:1.11
@@ -30,10 +29,10 @@ spec:
         - name: log-app-read
           image: dxvann/log-output-read:1.11
           env:
-            - name: PING_PONG_FILE_PATH
-              value: "/usr/src/app/files/count.txt"
             - name: LOG_OUT_FILE_PATH
               value: "/usr/src/app/files/uuid.txt"
+            - name: PING_PONG_URL
+              value: "http://ping-pong-app-svc:1234"
           volumeMounts:
             - name: shared-image
               mountPath: /usr/src/app/files
