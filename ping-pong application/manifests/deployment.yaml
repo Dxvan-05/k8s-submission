@@ -14,10 +14,6 @@ spec:
       labels:
         app: ping-pong-app
     spec:
-      volumes:
-          - name: shared-image
-            persistentVolumeClaim:
-              claimName: image-claim
       containers:
       - name: ping-pong-app
         image: dxvann/ping-pong-app:2.1
@@ -25,6 +21,3 @@ spec:
           - name: PING_PONG_FILE_PATH
             value: "/usr/src/app/files/count.txt"
         imagePullPolicy: Always
-        volumeMounts:
-          - name: shared-image
-            mountPath: /usr/src/app/files
