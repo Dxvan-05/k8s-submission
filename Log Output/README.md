@@ -11,16 +11,6 @@
 k3d cluster create -a 2 -p 8081:80@loadbalancer
 ```
 
-2. Apply persistent storage
-
-```sh
-kubectl apply -f ../manifests/persistent-volume.yaml
-```
-
-3. Apply persistent storage claim
-
-```sh
-kubectl apply -f ../manifests/persistent-volume-claim.yaml
 ```
 
 4. Deploy ping-pong-application 
