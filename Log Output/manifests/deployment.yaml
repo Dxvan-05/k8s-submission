@@ -27,7 +27,7 @@ spec:
             - name: shared-image
               mountPath: /usr/src/app/files
         - name: log-app-read
-          image: dxvann/log-output-read:1.11
+          image: dxvann/log-output-read:2.1
           env:
             - name: LOG_OUT_FILE_PATH
               value: "/usr/src/app/files/uuid.txt"
