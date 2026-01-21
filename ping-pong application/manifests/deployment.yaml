@@ -19,5 +19,5 @@ spec:
         image: dxvann/ping-pong-app:2.1
         env:
           - name: PING_PONG_FILE_PATH
-            value: "/usr/src/app/files/count.txt"
+            value: "/app/count.txt"
         imagePullPolicy: Always
