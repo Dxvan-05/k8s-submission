@@ -13,11 +13,40 @@
         <input id="todo-input" style="margin-right: 10px;" /><button id="create-todo-btn">Create todo</button>
     </div>
     <ul id="todo-list">
-      <li>Learn Kubernetes</li>
-      <li>Learn GO</li>
+
     </ul>
   </body>
   <script>
+
+    async function getTodos() {
+      const response = await fetch('/todos')
+      const todos = await response.json();
+      return todos
+    }
+
+    function createTodo(todo) {
+      return fetch("/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain"
+        },
+        body: todo
+      });
+    }
+
+    function addTodos(todos) {
+        const unorderedList = document.querySelector('#todo-list')
+        todos.forEach(todo => {
+          const listItem = document.createElement('li')
+          listItem.textContent = todo
+          unorderedList.appendChild(listItem)
+        });
+    }
+
+    getTodos().then(todos => addTodos(todos)).catch(err => {
+      alert("Could not get the todos from the server")
+    })
+
     document.querySelector('#create-todo-btn').addEventListener('click', e => {
         const newTodo = document.querySelector('#todo-input').value
         document.querySelector('#todo-input').value = ''
@@ -26,10 +55,14 @@
             return
         }
 
-        const unorderedList = document.querySelector('#todo-list')
-        const listItem = document.createElement('li')
-        listItem.textContent = newTodo
-        unorderedList.appendChild(listItem)
+        createTodo(newTodo).then(response => {
+          if(response.ok) {
+            addTodos([newTodo])
+          } else {
+            alert("Couldn't add new todo")
+          }
+        })
+        
     })
   </script>
 </html>
