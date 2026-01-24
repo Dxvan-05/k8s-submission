@@ -17,7 +17,7 @@ k3d cluster create -a 2 -p 8081:80@loadbalancer
 ### 2. Apply Persistent Storage
 
 ```sh
-kubectl apply -f ../../manifests/persistent-volume.yaml
+kubectl apply -f ../manifests/persistent-volume.yaml
 ```
 
 
@@ -25,7 +25,7 @@ kubectl apply -f ../../manifests/persistent-volume.yaml
 ### 3. Apply Persistent Volume Claim
 
 ```sh
-kubectl apply -f ../../manifests/persistent-volume-claim.yaml
+kubectl apply -f ../manifests/persistent-volume-claim.yaml
 ```
 
 
