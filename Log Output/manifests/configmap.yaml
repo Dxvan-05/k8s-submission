@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: exercises
+  name: log-output-configmap
+data:
+  MESSAGE: "Hey there! This message was set in a ConfigMap!"
+
+  information.txt: |
+    this text is from a file
+  
