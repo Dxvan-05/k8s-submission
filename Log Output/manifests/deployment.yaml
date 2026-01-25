@@ -18,6 +18,12 @@ spec:
       volumes:
         - name: shared-image
           emptyDir: {}
+        - name: information-image
+          configMap:
+            name: log-output-configmap
+            items:
+            - key: "information.txt"
+              path: "information.txt"
       containers:
         - name: log-app-write
           image: dxvann/log-output-write:1.11
@@ -28,10 +34,12 @@ spec:
             - name: shared-image
               mountPath: /usr/src/app/files
         - name: log-app-read
-          image: dxvann/log-output-read:2.1
+          image: dxvann/log-output-read:2.5
           env:
             - name: LOG_OUT_FILE_PATH
               value: "/usr/src/app/files/uuid.txt"
+            - name: INFORMATION_FILE_PATH
+              value: "/usr/src/app/information/information.txt"
             - name: PING_PONG_URL
               value: "http://ping-pong-app-svc:1234"
             - name: MESSAGE
@@ -42,5 +50,7 @@ spec:
           volumeMounts:
             - name: shared-image
               mountPath: /usr/src/app/files
+            - name: information-image
+              mountPath: /usr/src/app/information
 
         

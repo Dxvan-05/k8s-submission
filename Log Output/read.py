@@ -5,6 +5,8 @@ from os import environ
 
 LOG_OUT_FILE_PATH = environ.get('LOG_OUT_FILE_PATH', './uuid.txt')
 PING_PONG_URL= environ.get('PING_PONG_URL')
+MESSAGE = environ.get('MESSAGE')
+INFORMATION_FILE_PATH = environ.get('INFORMATION_FILE_PATH')
 
 app = FastAPI()
 
@@ -22,4 +24,13 @@ def get_count():
 def read_uuid():
     log_output = read_file(LOG_OUT_FILE_PATH)
     ping_pong_count = get_count()
-    return f'{log_output}\nPing / Pongs: {ping_pong_count}'
+    information_file_message = read_file(INFORMATION_FILE_PATH)
+
+    response_string = f"""
+    {log_output}
+    Ping / Pongs: {ping_pong_count}
+    env variable: MESSAGE = {MESSAGE}
+    file content: {information_file_message}
+    """
+
+    return response_string
