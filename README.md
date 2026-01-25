@@ -24,3 +24,4 @@
 - [2.2](https://github.com/Dxvan-05/k8s-submission/tree/2.2/TODO%20app)
 - [2.3](https://github.com/Dxvan-05/k8s-submission/tree/2.3/ping-pong%20application) (ping-pong application) [2.3](https://github.com/Dxvan-05/k8s-submission/tree/2.3/Log%20Output) (Log Output)
 - [2.4](https://github.com/Dxvan-05/k8s-submission/tree/2.4/TODO%20app)
+- [2.5](https://github.com/Dxvan-05/k8s-submission/tree/2.5/Log%20Output)

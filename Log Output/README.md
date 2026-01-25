@@ -11,34 +11,50 @@
 k3d cluster create -a 2 -p 8081:80@loadbalancer
 ```
 
+2. Create the exercises namespace
+
+```sh
+kubectl create namespace exercises
 ```
 
-4. Deploy ping-pong-application 
+3. Switch to the exercises namespace
+
+```sh
+kubectl config set-context --current --namespace=exercises
+```
+
+4. Apply the ConfigMap
+
+```sh
+kubectl apply -f manifests/configmap.yaml
+```
+
+5. Deploy ping-pong-application 
 
 ```sh
 kubectl apply -f ../ping-pong\ application/manifests/deployment.yaml
 ```
 
-5. Deploy the log app
+6. Deploy the log app
 
 ```sh
 kubectl apply -f manifests/deployment.yaml
 ```
 
 
-6. Apply the ClusterIP Service for Log Output
+7. Apply the ClusterIP Service for Log Output
 
 ```sh
 kubectl apply -f manifests/service.yaml
 ```
 
-7. Apply the ClusterIP Service for ping-pong-application
+8. Apply the ClusterIP Service for ping-pong-application
 
 ```sh
 kubectl apply -f ../ping-pong\ application/manifests/service.yaml
 ```
 
-8. Apply the Ingress Resource
+9. Apply the Ingress Resource
 
 ```sh
 kubectl apply -f manifests/ingress.yaml
@@ -47,7 +63,7 @@ kubectl apply -f manifests/ingress.yaml
 This routes traffic from the loadbalancer to service.
 
 
-9. Access through browser
+10. Access through browser
 
 Open in your browser:
 
