@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: exercises
+  name: database-configmap
+data:
+  init.sql: |
+    CREATE TABLE IF NOT EXISTS counter (
+    id SERIAL PRIMARY KEY,
+    value INTEGER NOT NULL
+    );
+
+    INSERT INTO counter (value)
+    SELECT 0
+    WHERE NOT EXISTS (SELECT * FROM counter);
+  POSTGRES_DB: "pingpongdb"
+  POSTGRES_USER: "pingponguser"
