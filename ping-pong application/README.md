@@ -12,13 +12,31 @@
 k3d cluster create -a 2 -p 8081:80@loadbalancer
 ```
 
-2. Deploy the App
+2. Create the PostgreSQL Secret
+
+```sh
+kubectl create secret generic postgres-secret --from-literal=POSTGRES_PASSWORD=mypassword -n exercises
+```
+
+3. Apply the Database ConfigMap
+
+```sh
+kubectl apply -f manifests/database-configmap.yaml
+```
+
+4. Apply the Database StatefulSet
+
+```sh
+kubectl apply -f manifests/database.yaml
+```
+
+5. Deploy the App
 
 ```sh
 kubectl apply -f manifests/deployment.yaml
 ```
 
-3. Apply the ClusterIP Service
+6. Apply the ClusterIP Service
 
 ```sh
 kubectl apply -f manifests/service.yaml
@@ -27,13 +45,13 @@ kubectl apply -f manifests/service.yaml
 > This project share the ingress resource with another project "Log Output"
 > Apply the ingress resource from that directory
 
-4. Apply the Ingress Resource
+7. Apply the Ingress Resource
 
 ```sh
 kubectl apply -f ../Log\ Output/manifests/ingress.yaml
 ```
 
-5. Access through browser
+8. Access through browser
 
 ```
 http://localhost:8081/pingpong
