@@ -1,30 +1,50 @@
 from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
 from os import environ
+import psycopg2
+
 
 app = FastAPI()
 
-PING_PONG_FILE_PATH = environ.get('PING_PONG_FILE_PATH', './count.txt')
+DB_HOST = environ.get("POSTGRES_HOST", "localhost")
+DB_NAME = environ.get("POSTGRES_DB", "pingpongdb")
+DB_USER = environ.get("POSTGRES_USER", "pingponguser")
+DB_PASSWORD = environ.get("POSTGRES_PASSWORD", "password")
 
-def write_to_disk(string):
-    with open(PING_PONG_FILE_PATH, 'w') as file:
-        file.write(string)
+def get_connection():
+    return psycopg2.connect(
+        host=DB_HOST,
+        database=DB_NAME,
+        user=DB_USER,
+        password=DB_PASSWORD
+    )
 
-def read_from_disk():
-    with open(PING_PONG_FILE_PATH, 'r') as file:
-        return file.read()
-
-write_to_disk('0')
 
 
 @app.get("/pingpong", response_class=PlainTextResponse)
 def respond_pong():
-    counter = int(read_from_disk())
-    counter += 1
-    write_to_disk(str(counter))
-    return f"pong {counter}"
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("UPDATE counter SET value = value + 1 RETURNING value;")
+    new_value = cur.fetchone()[0]
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return f"pong {new_value}"
+
 
 @app.get("/pings", response_class=PlainTextResponse)
 def get_counter():
-    counter = int(read_from_disk())
-    return str(counter)
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("SELECT value FROM counter LIMIT 1;")
+    value = cur.fetchone()[0]
+
+    cur.close()
+    conn.close()
+
+    return str(value)
