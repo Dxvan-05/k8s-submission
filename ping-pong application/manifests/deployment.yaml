@@ -17,8 +17,17 @@ spec:
     spec:
       containers:
       - name: ping-pong-app
-        image: dxvann/ping-pong-app:2.1
+        image: dxvann/ping-pong-app:2.7
         env:
-          - name: PING_PONG_FILE_PATH
-            value: "/app/count.txt"
+          - name: POSTGRES_HOST
+            value: "postgres-svc"
+          - name: POSTGRES_DB
+            value: "pingpongdb"
+          - name: POSTGRES_USER
+            value: "pingponguser"
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRES_PASSWORD
         imagePullPolicy: Always
