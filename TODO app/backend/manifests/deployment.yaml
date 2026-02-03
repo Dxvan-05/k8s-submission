@@ -17,10 +17,27 @@ spec:
     spec:
       containers:
       - name: todo-backend
-        image: dxvann/todo-backend:2.2
+        image: dxvann/todo-backend:2.8
         imagePullPolicy: Always
         env:
           - name: PORT
             value: "9999"
+          - name: POSTGRES_HOST
+            value: "postgres-svc"
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: database-configmap
+                key: POSTGRES_DB
+          - name: POSTGRES_USER
+            valueFrom:
+              configMapKeyRef:
+                name: database-configmap
+                key: POSTGRES_USER
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRES_PASSWORD
 
         
