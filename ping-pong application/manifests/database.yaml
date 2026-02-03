@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
+  namespace: exercises
   name: postgres-stset
 spec:
   serviceName: postgres-svc
@@ -60,6 +61,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: exercises
   name: postgres-svc
   labels:
     app: postgres
