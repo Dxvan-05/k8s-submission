@@ -87,7 +87,14 @@ kubectl apply -f manifests/ingress.yaml
 ```
 
 
-### 12. Access Through Browser
+### 12. Apply the CronJob
+
+```sh
+kubectl apply -f manifests/cronjob.yaml
+```
+
+
+### 13. Access Through Browser
 
 Open in your browser:
 
