@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: todo-wiki-cronjob
+  namespace: project
+spec:
+  schedule: "@hourly"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: todo-wiki
+            image: dxvann/todo-wiki-cron:2.9
+            imagePullPolicy: IfNotPresent
+            env:
+              - name: TODO_BACKEND_URL
+                value: "http://todo-backend-svc:3456"
+          restartPolicy: OnFailure
