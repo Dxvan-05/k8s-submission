@@ -50,10 +50,6 @@
     document.querySelector('#create-todo-btn').addEventListener('click', e => {
         const newTodo = document.querySelector('#todo-input').value
         document.querySelector('#todo-input').value = ''
-        if(newTodo.length > 140) {
-            alert('The todo item exceeds the character limit of 140. Current character count: ' + newTodo.length)
-            return
-        }
 
         createTodo(newTodo).then(response => {
           if(response.ok) {
