@@ -19,6 +19,7 @@ client.connect()
 
 app.get('/todos', async (req, res) => {
   try {
+    console.log('[INFO] Retrieving all todos')
     const result = await client.query('SELECT * FROM todos')
     res.send(result.rows.map(row => row.todo))
   } catch (err) {
@@ -30,10 +31,12 @@ app.get('/todos', async (req, res) => {
 app.post('/todos', async (req, res) => {
   const newTodo = req.body
   if (!newTodo || newTodo.length > 140) {
+    console.error('[ERROR] Todo exceeds 140 characters or is empty')
     return res.status(400).send('Todo must be non-empty and less than 140 characters')
   }
   try {
     const result = await client.query('INSERT INTO todos (todo) VALUES ($1) RETURNING *', [newTodo])
+    console.log('[INFO] Created new todo: ' + newTodo)
     res.status(201).send(result.rows[0])
   } catch (err) {
     console.error(err)
