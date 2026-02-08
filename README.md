@@ -29,3 +29,4 @@
 - [2.7](https://github.com/Dxvan-05/k8s-submission/tree/2.7/ping-pong%20application)
 - [2.8](https://github.com/Dxvan-05/k8s-submission/tree/2.8/TODO%20app)
 - [2.9](https://github.com/Dxvan-05/k8s-submission/tree/2.9/TODO%20app)
+- [2.10](https://github.com/Dxvan-05/k8s-submission/tree/2.10/TODO%20app)

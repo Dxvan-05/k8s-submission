@@ -21,7 +21,7 @@ spec:
             claimName: image-claim
       containers:
       - name: todo-app
-        image: dxvann/todo-app:2.2
+        image: dxvann/todo-app:2.10
         imagePullPolicy: Always
         volumeMounts:
             - name: shared-image
