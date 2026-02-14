@@ -1,65 +1,66 @@
-# Accessing the App
+# Deploying and Accessing on GKE (LoadBalancer)
 
-> [!NOTE]
-> For this you need to have access to port 80 on the kubernetes loadbalancer.
-> This command will forward requests from port 8081 on the local machine to port 80 on the loadbalancer
+Prerequisites:
+- `gcloud` CLI installed and authenticated
+- Billing & Kubernetes Engine API enabled on your GCP project
 
-
-
- 1. Create the k3d Cluster
+1. Create a GKE cluster (example):
 
 ```sh
-k3d cluster create -a 2 -p 8081:80@loadbalancer
+gcloud container clusters create ping-pong-cluster \
+  --zone=<zone> \
+  --num-nodes=3 \
+  --disk-size=32 \
+  --machine-type=e2-micro
 ```
 
-2. Create the Namespace
+2. Get cluster credentials for `kubectl`:
+
+```sh
+gcloud container clusters get-credentials ping-pong-cluster --zone=<zone>
+```
+
+3. Create the namespace:
 
 ```sh
 kubectl create namespace exercises
 ```
 
-3. Create the PostgreSQL Secret
+4. Create the PostgreSQL secret:
 
 ```sh
-kubectl create secret generic postgres-secret --from-literal=POSTGRES_PASSWORD=mypassword -n exercises
+kubectl create secret generic postgres-secret \
+  --from-literal=POSTGRES_PASSWORD=mypassword -n exercises
 ```
 
-4. Apply the Database ConfigMap
+5. Apply database config and statefulset:
 
 ```sh
 kubectl apply -f manifests/database-configmap.yaml
-```
-
-5. Apply the Database StatefulSet
-
-```sh
 kubectl apply -f manifests/database.yaml
 ```
 
-6. Deploy the App
+6. Deploy the application and service:
 
 ```sh
 kubectl apply -f manifests/deployment.yaml
-```
-
-7. Apply the ClusterIP Service
-
-```sh
 kubectl apply -f manifests/service.yaml
 ```
-> [!NOTE]
-> This project share the ingress resource with another project "Log Output"
-> Apply the ingress resource from that directory
 
-8. Apply the Ingress Resource
+7. Wait for the external IP to be provisioned and get it:
 
 ```sh
-kubectl apply -f ../Log\ Output/manifests/ingress.yaml
+# Watch status
+kubectl get svc -n exercises --watch
 ```
 
-9. Access through browser
+8. Access the app through the LoadBalancer IP (service port is `1234`):
 
-```
-http://localhost:8081/pingpong
+```sh
+# replace <EXTERNAL-IP> with the value returned above
+curl "http://<EXTERNAL-IP>:1234/pingpong"
+
+# or open in a browser:
+http://<EXTERNAL-IP>:1234/pingpong
 ```
 
