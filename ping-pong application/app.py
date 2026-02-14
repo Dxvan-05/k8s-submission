@@ -48,3 +48,7 @@ def get_counter():
     conn.close()
 
     return str(value)
+
+@app.get("/")
+def get_health():
+    return {"status": "ok"}
