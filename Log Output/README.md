@@ -1,72 +1,75 @@
-# Accessing the App
+# Accessing the App (GKE NodePort + Ingress)
 
-> [!NOTE]
-> For this you need to have access to port 80 on the kubernetes loadbalancer.
-> This command will forward requests from port 8081 on the local machine to port 80 on the loadbalancer
+Prerequisites:
+- `gcloud` CLI installed and authenticated and project set
+- Billing & Kubernetes Engine API enabled on your GCP project
+- `kubectl` configured for the GKE cluster
 
-
- 1. Create the k3d Cluster
+1. Create a GKE cluster (example):
 
 ```sh
-k3d cluster create -a 2 -p 8081:80@loadbalancer
+gcloud container clusters create ping-pong-cluster \
+  --zone=<zone> \
+  --num-nodes=3 \
+  --disk-size=32 \
+  --machine-type=e2-micro
 ```
 
-2. Create the exercises namespace
+2. Get cluster credentials:
+
+```sh
+gcloud container clusters get-credentials ping-pong-cluster --zone=<zone>
+```
+
+3. Create the exercises namespace:
 
 ```sh
 kubectl create namespace exercises
 ```
 
-3. Switch to the exercises namespace
+4. Switch to the exercises namespace:
 
 ```sh
 kubectl config set-context --current --namespace=exercises
 ```
 
-4. Apply the ConfigMap
+5. Apply the ConfigMap:
 
 ```sh
 kubectl apply -f manifests/configmap.yaml
 ```
 
-5. Deploy ping-pong-application 
+6. Deploy ping-pong-application:
 
 ```sh
 kubectl apply -f ../ping-pong\ application/manifests/deployment.yaml
 ```
 
-6. Deploy the log app
+7. Deploy the log app:
 
 ```sh
 kubectl apply -f manifests/deployment.yaml
 ```
 
-
-7. Apply the ClusterIP Service for Log Output
+8. Apply NodePort Service:
 
 ```sh
 kubectl apply -f manifests/service.yaml
+
 ```
 
-8. Apply the ClusterIP Service for ping-pong-application
-
-```sh
-kubectl apply -f ../ping-pong\ application/manifests/service.yaml
-```
-
-9. Apply the Ingress Resource
+9. Apply the GKE Ingress resource:
 
 ```sh
 kubectl apply -f manifests/ingress.yaml
 ```
 
-This routes traffic from the loadbalancer to service.
+10. Wait for the Ingress to be provisioned and get its external IP:
 
-
-10. Access through browser
-
-Open in your browser:
-
+```sh
+kubectl get ingress -n exercises --watch
+# when ADDRESS appears, open in browser:
+# http://<INGRESS-EXTERNAL-IP>/
+# http://<INGRESS-EXTERNAL-IP>/pingpong
 ```
-http://localhost:8081
-```
+
