@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: ping-pong-app
-        image: dxvann/ping-pong-app:3.2
+        image: dxvann/ping-pong-app:3.4
         env:
           - name: POSTGRES_HOST
             value: "postgres-svc"

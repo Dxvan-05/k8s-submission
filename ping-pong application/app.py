@@ -21,7 +21,7 @@ def get_connection():
 
 
 
-@app.get("/pingpong", response_class=PlainTextResponse)
+@app.get("/", response_class=PlainTextResponse)
 def respond_pong():
     conn = get_connection()
     cur = conn.cursor()
@@ -48,7 +48,3 @@ def get_counter():
     conn.close()
 
     return str(value)
-
-@app.get("/")
-def get_health():
-    return {"status": "ok"}
