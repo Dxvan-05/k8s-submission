@@ -95,7 +95,7 @@ jobs:
         working-directory: "TODO app"
 
       - name: Apply Postgres Secret
-        run: kubectl create secret generic postgres-secret --from-literal=POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+        run: kubectl create secret generic postgres-secret --from-literal=POSTGRES_PASSWORD=$POSTGRES_PASSWORD || true
 
       - name: Deploy to GKE
         run: |-
