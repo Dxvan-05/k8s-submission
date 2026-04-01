@@ -69,10 +69,10 @@ jobs:
 
       # Build the Docker images
       - name: "Build Frontend Docker image"
-        run: docker build --tag $FRONTEND_IMAGE_TAG -f TODO\ app/frontend/Dockerfile .
+        run: cd "TODO app/frontend" && docker build --tag $FRONTEND_IMAGE_TAG .
 
       - name: "Build Backend Docker image"
-        run: docker build --tag $BACKEND_IMAGE_TAG -f TODO\ app/backend/Dockerfile .
+        run: cd "TODO app/backend" && docker build --tag $BACKEND_IMAGE_TAG .
 
       # Push the Docker images to Artifact Registry
       - name: "Push Frontend Docker image to Artifact Registry"
@@ -96,7 +96,7 @@ jobs:
 
       - name: Deploy to GKE
         run: |-
-          kustomize build . | kubectl apply -f -
+          cd ".." && kustomize build . | kubectl apply -f -
           kubectl rollout status deployment $FRONTEND_SERVICE
           kubectl rollout status deployment $BACKEND_SERVICE
           kubectl get services -o wide
