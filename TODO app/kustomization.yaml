@@ -8,4 +8,5 @@ resources:
   - backend/manifests/deployment.yaml
   - backend/manifests/service.yaml
   - manifests/ingress.yaml
+  - manifests/persistent-volume-claim.yaml
 
