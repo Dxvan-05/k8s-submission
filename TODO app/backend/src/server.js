@@ -17,6 +17,10 @@ app.use(express.text())
 
 client.connect()
 
+app.get('/', (req, res) => {
+  res.send("The server is healthy!")
+})
+
 app.get('/todos', async (req, res) => {
   try {
     console.log('[INFO] Retrieving all todos')

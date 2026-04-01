@@ -1,0 +1,101 @@
+name: Release application
+
+on:
+  push:
+
+env:
+  # GKE cluster
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: dwk-cluster
+  GKE_ZONE: asia-south1-a
+
+  # GKE Deployment names
+  FRONTEND_SERVICE: todo-app-deployment
+  BACKEND_SERVICE: todo-backend-deployment
+
+  # Artifact registry
+  REGISTRY: asia-south1-docker.pkg.dev
+  REPOSITORY: dwk-repo
+  # Image names
+  FRONTEND_IMAGE: todo-frontend
+  BACKEND_IMAGE: todo-backend
+
+  BRANCH: ${{ github.ref_name }}
+  POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+
+# ...
+jobs:
+  build-publish-deploy:
+    name: Build, Publish and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # Setup
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: "${{ secrets.GKE_SA_KEY }}"
+
+      - name: "Set up Cloud SDK"
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: "Use gcloud CLI"
+        run: gcloud info
+
+      - name: Configure Docker to use the Google Cloud registry
+        run: gcloud --quiet auth configure-docker
+
+      - name: "Get GKE credentials"
+        uses: "google-github-actions/get-gke-credentials@v2"
+        with:
+          cluster_name: "${{ env.GKE_CLUSTER }}"
+          project_id: "${{ env.PROJECT_ID }}"
+          location: "${{ env.GKE_ZONE }}"
+
+      - name: "Set up Kustomize"
+        uses: imranismail/setup-kustomize@v2.1.0
+
+      # Form the image names
+
+      - name: "Form the Frontend image name"
+        run: echo "FRONTEND_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+
+      - name: "Form the Backend image name"
+        run: echo "BACKEND_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+
+      # Build the Docker images
+      - name: "Build Frontend Docker image"
+        run: docker build --tag $FRONTEND_IMAGE_TAG -f TODO\ app/frontend/Dockerfile .
+
+      - name: "Build Backend Docker image"
+        run: docker build --tag $BACKEND_IMAGE_TAG -f TODO\ app/backend/Dockerfile .
+
+      # Push the Docker images to Artifact Registry
+      - name: "Push Frontend Docker image to Artifact Registry"
+        run: docker push $FRONTEND_IMAGE_TAG
+
+      - name: "Push Backend Docker image to Artifact Registry"
+        run: docker push $BACKEND_IMAGE_TAG
+
+      - name: Switch to the branch namespace
+        run: |-
+          kubectl create namespace $BRANCH || true
+          kubectl config set-context --current --namespace=$BRANCH
+
+      - name: Set up Kustomize images
+        run: |-
+          kustomize edit set image PROJECT/FRONTEND_IMAGE=$FRONTEND_IMAGE_TAG
+          kustomize edit set image PROJECT/BACKEND_IMAGE=$BACKEND_IMAGE_TAG 
+
+      - name: Apply Postgres Secret
+        run: kubectl create secret generic postgres-secret --from-literal=POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+
+      - name: Deploy to GKE
+        run: |-
+          kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment $FRONTEND_SERVICE
+          kubectl rollout status deployment $BACKEND_SERVICE
+          kubectl get services -o wide
