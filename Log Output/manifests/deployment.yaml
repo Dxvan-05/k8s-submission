@@ -26,7 +26,7 @@ spec:
               path: "information.txt"
       containers:
         - name: log-app-write
-          image: dxvann/log-output-write:1.11
+          image: AUTHOR/IMAGE_WRITE
           env:
             - name: LOG_OUT_FILE_PATH
               value: "/usr/src/app/files/uuid.txt"
@@ -34,7 +34,7 @@ spec:
             - name: shared-image
               mountPath: /usr/src/app/files
         - name: log-app-read
-          image: dxvann/log-output-read:2.5
+          image: AUTHOR/IMAGE_READ
           env:
             - name: LOG_OUT_FILE_PATH
               value: "/usr/src/app/files/uuid.txt"
