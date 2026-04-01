@@ -69,10 +69,12 @@ jobs:
 
       # Build the Docker images
       - name: "Build Frontend Docker image"
-        run: cd "TODO app/frontend" && docker build --tag $FRONTEND_IMAGE_TAG .
+        run: docker build --tag $FRONTEND_IMAGE_TAG .
+        working-directory: "TODO app/frontend"
 
       - name: "Build Backend Docker image"
-        run: cd "TODO app/backend" && docker build --tag $BACKEND_IMAGE_TAG .
+        run: docker build --tag $BACKEND_IMAGE_TAG .
+        working-directory: "TODO app/backend"
 
       # Push the Docker images to Artifact Registry
       - name: "Push Frontend Docker image to Artifact Registry"
@@ -88,7 +90,7 @@ jobs:
 
       - name: Set up Kustomize images
         run: |-
-          cd ".." && kustomize edit set image PROJECT/FRONTEND_IMAGE=$FRONTEND_IMAGE_TAG
+          cd "TODO app" && kustomize edit set image PROJECT/FRONTEND_IMAGE=$FRONTEND_IMAGE_TAG
           kustomize edit set image PROJECT/BACKEND_IMAGE=$BACKEND_IMAGE_TAG 
 
       - name: Apply Postgres Secret
@@ -100,3 +102,4 @@ jobs:
           kubectl rollout status deployment $FRONTEND_SERVICE
           kubectl rollout status deployment $BACKEND_SERVICE
           kubectl get services -o wide
+        working-directory: "TODO app"
