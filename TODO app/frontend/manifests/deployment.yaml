@@ -34,4 +34,6 @@ spec:
             value: "https://picsum.photos/1200"
           - name: IMAGE_DOWNLOAD_PATH
             value: "/server/public/image/image.jpeg"
+  strategy:
+    type: Recreate
         
