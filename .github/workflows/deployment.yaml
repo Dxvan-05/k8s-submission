@@ -83,10 +83,13 @@ jobs:
       - name: "Push Backend Docker image to Artifact Registry"
         run: docker push $BACKEND_IMAGE_TAG
 
+      - name: Evaluate namespace from branch name
+        run: echo "NAMESPACE=$([[ "$BRANCH" == "main" ]] && echo "project" || echo "$BRANCH")" >> $GITHUB_ENV
+
       - name: Switch to the branch namespace
         run: |-
-          kubectl create namespace $BRANCH || true
-          kubectl config set-context --current --namespace=$BRANCH
+          kubectl create namespace $NAMESPACE || true
+          kubectl config set-context --current --namespace=$NAMESPACE
 
       - name: Set up Kustomize images
         run: |-
