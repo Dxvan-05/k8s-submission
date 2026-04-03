@@ -48,7 +48,7 @@ spec:
                   configMapKeyRef:
                     name: database-configmap
                     key: POSTGRES_USER
-              - name: POSTGRES_PASSWORD
+              - name: PGPASSWORD
                 valueFrom:
                   secretKeyRef:
                     name: postgres-secret
