@@ -2,7 +2,6 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: todo-wiki-cronjob
-  namespace: project
 spec:
   schedule: "@hourly"
   jobTemplate:
@@ -16,4 +15,68 @@ spec:
             env:
               - name: TODO_BACKEND_URL
                 value: "http://todo-backend-svc:3456"
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup-cronjob
+spec:
+  schedule: "@daily"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: backup-storage
+              emptyDir: {}
+            - name: gcs-key
+              secret:
+                secretName: gcs-key
+          initContainers:
+          - name: postgres-backup-dump
+            image: postgres
+            imagePullPolicy: IfNotPresent
+            env:
+              - name: POSTGRES_DB
+                valueFrom:
+                  configMapKeyRef:
+                    name: database-configmap
+                    key: POSTGRES_DB
+              - name: POSTGRES_USER
+                valueFrom:
+                  configMapKeyRef:
+                    name: database-configmap
+                    key: POSTGRES_USER
+              - name: POSTGRES_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: postgres-secret
+                    key: POSTGRES_PASSWORD
+            command: ["/bin/sh", "-c"]
+            args:
+              - pg_dump -h postgres-svc -U $POSTGRES_USER $POSTGRES_DB > /backup/backup.sql;
+            volumeMounts:
+              - name: backup-storage
+                mountPath: /backup
+
+
+          containers:
+          - name: postgres-backup-uploader
+            image: google/cloud-sdk:alpine
+            imagePullPolicy: IfNotPresent
+            env:
+              - name: GCS_BUCKET_NAME
+                value: "dwk-posgres-backup"
+              - name: GOOGLE_APPLICATION_CREDENTIALS
+                value: "/var/secrets/gcs-key/key.json"
+            command: ["/bin/sh", "-c"]
+            args:
+              - gsutil cp /backup/backup.sql gs://$GCS_BUCKET_NAME/$(date +%d-%m-%Y).sql;
+            volumeMounts:
+              - name: backup-storage
+                mountPath: /backup
+              - name: gcs-key
+                mountPath: /var/secrets/
+                readOnly: true
           restartPolicy: OnFailure

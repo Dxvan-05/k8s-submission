@@ -22,6 +22,7 @@ env:
 
   BRANCH: ${{ github.ref_name }}
   POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  GCS_KEY: ${{ secrets.GCS_KEY }}
 
 # ...
 jobs:
@@ -97,8 +98,10 @@ jobs:
           kustomize edit set image PROJECT/BACKEND_IMAGE=$BACKEND_IMAGE_TAG 
         working-directory: "TODO app"
 
-      - name: Apply Postgres Secret
-        run: kubectl create secret generic postgres-secret --from-literal=POSTGRES_PASSWORD=$POSTGRES_PASSWORD || true
+      - name: Apply Secrets
+        run: |-
+           kubectl create secret generic postgres-secret --from-literal=POSTGRES_PASSWORD=$POSTGRES_PASSWORD || true
+           kubectl create secret generic gcs-key --from-literal=key.json=$GCS_KEY || true
 
       - name: Deploy to GKE
         run: |-
