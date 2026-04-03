@@ -72,7 +72,9 @@ spec:
                 value: "/var/secrets/gcs-key/key.json"
             command: ["/bin/sh", "-c"]
             args:
-              - gcloud storage cp /backup/backup.sql gs://$GCS_BUCKET_NAME/$(date +%d-%m-%Y).sql;
+              - |-
+                gcloud auth activate-service-account --key-file=/var/secrets/gcs-key/key.json &&
+                gcloud storage cp /backup/backup.sql gs://$GCS_BUCKET_NAME/$(date +%d-%m-%Y).sql
             volumeMounts:
               - name: backup-storage
                 mountPath: /backup
