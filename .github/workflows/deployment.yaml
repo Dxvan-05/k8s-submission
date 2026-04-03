@@ -101,7 +101,8 @@ jobs:
       - name: Apply Secrets
         run: |-
            kubectl create secret generic postgres-secret --from-literal=POSTGRES_PASSWORD=$POSTGRES_PASSWORD || true
-           kubectl create secret generic gcs-key --from-literal=key.json=$GCS_KEY || true
+           echo "$GCS_KEY" > gcs-key.json
+           kubectl create secret generic gcs-key --from-file=key.json=gcs-key.json || true
 
       - name: Deploy to GKE
         run: |-
