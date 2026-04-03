@@ -69,11 +69,10 @@ spec:
               - name: GCS_BUCKET_NAME
                 value: "dwk-posgres-backup"
               - name: GOOGLE_APPLICATION_CREDENTIALS
-                value: "/var/secrets/gcs-key/key.json"
+                value: "/var/secrets/key.json"
             command: ["/bin/sh", "-c"]
             args:
               - |-
-                gcloud auth activate-service-account --key-file=/var/secrets/gcs-key/key.json &&
                 gcloud storage cp /backup/backup.sql gs://$GCS_BUCKET_NAME/$(date +%d-%m-%Y).sql
             volumeMounts:
               - name: backup-storage
