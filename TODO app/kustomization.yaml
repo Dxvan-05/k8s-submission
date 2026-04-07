@@ -5,8 +5,10 @@ resources:
   - manifests/database.yaml
   - frontend/manifests/deployment.yaml
   - frontend/manifests/service.yaml
+  - frontend/manifests/horizontalpodautoscaler.yaml
   - backend/manifests/deployment.yaml
   - backend/manifests/service.yaml
+  - backend/manifests/horizontalpodautoscaler.yaml
   - manifests/ingress.yaml
   - manifests/persistent-volume-claim.yaml
   - manifests/cronjob.yaml
