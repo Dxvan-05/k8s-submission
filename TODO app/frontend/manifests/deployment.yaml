@@ -25,6 +25,13 @@ spec:
         volumeMounts:
             - name: shared-image
               mountPath: /server/public/image/
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "300m"
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
         env:
           - name: PORT
             value: "6767"
